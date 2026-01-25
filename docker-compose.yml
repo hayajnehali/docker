@@ -6,6 +6,7 @@ services:
     image: nginx:latest
     ports:
       - "80:80" # المستخدم يدخل من بورت 80 العادي
+      - "433:433"
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
     networks:
@@ -21,13 +22,14 @@ services:
     # ports:
     #  - "8080:8080" 
     volumes:
-     - ./my_uploaded_files:/app/wwwroot
+    - ./uploads/assets:/app/wwwroot/assets
+    - ./uploads/emails:/app/wwwroot/EmailTemplate
     networks:
      - backend_net
     depends_on:
       - sqlserver  
   resturantwebsite.angular: 
-    image: alihaya/rusul_angular
+    image: alihaya/rusul_angular:latest
     # ports:
     #  - "3000:3000"
     networks:
