@@ -1,26 +1,46 @@
+networks:
+  backend_net:
+    driver: bridge
 services:
+  nginx_server:
+    image: nginx:latest
+    ports:
+      - "80:80" # المستخدم يدخل من بورت 80 العادي
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - backend_net
+    depends_on:
+      - resturantwebsite.api
+      - resturantwebsite.angular
   resturantwebsite.api: 
-    build:
-      context: ./ResturantWebSite
-      dockerfile: ResturantWebSite/Dockerfile
+    image: alihaya/rusul_api:latest
     environment: 
       - ASPNETCORE_HTTP_PORTS=8080 
       - ConnectionStrings__DBLocalConnection=Data Source=sqlserver;Database=rusul1;User Id=sa;Password=YourStrong@Password123;MultipleActiveResultSets=true;TrustServerCertificate=True;
-    ports:
-     - "8080:8080" 
+    # ports:
+    #  - "8080:8080" 
+    volumes:
+     - ./my_uploaded_files:/app/wwwroot
+    networks:
+     - backend_net
     depends_on:
       - sqlserver  
   resturantwebsite.angular: 
-    build:
-      context: ./angular/angularProject.V1/angularProject
-      dockerfile: dockerfile
-    ports:
-     - "3000:3000"
+    image: alihaya/rusul_angular
+    # ports:
+    #  - "3000:3000"
+    networks:
+      - backend_net
+    depends_on:
+      - resturantwebsite.api
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: sql_server_container
-    ports:
-      - "1433:1433"
+    # ports:
+    #   - "1433:1433"
+    networks:
+      - backend_net
     environment:
       - ACCEPT_EULA=Y
       - MSSQL_SA_PASSWORD=YourStrong@Password123
@@ -29,4 +49,4 @@ services:
       - mssql_data:/var/opt/mssql
 
 volumes:
-  mssql_data:
+  mssql_data: 
