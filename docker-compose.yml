@@ -18,7 +18,7 @@ services:
     image: alihaya/rusul_api:latest
     environment: 
       - ASPNETCORE_HTTP_PORTS=8080 
-      - ConnectionStrings__DBLocalConnection=Data Source=sqlserver;Database=rusul1;User Id=sa;Password=YourStrong@Password123;MultipleActiveResultSets=true;TrustServerCertificate=True;
+      - ConnectionStrings__DBLocalConnection=Data Source=sql_server_container;Database=rusul1;User Id=sa;Password=YourStrong@Password123;MultipleActiveResultSets=true;TrustServerCertificate=True;
     # ports:
     #  - "8080:8080" 
     volumes:
